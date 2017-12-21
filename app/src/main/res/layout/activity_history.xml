@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="newjohn.com.myapplication.activity.HistoryActivity"
+
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar_h"
+        app:title=" "
+
+        android:background="@color/colorPrimary">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="3dp">
+
+            <Button
+                android:id="@+id/start"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bg_1"
+                android:text="开始日期"
+                android:textSize="10dp"/>
+            <Button
+                android:id="@+id/start1"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bg_1"
+                android:text="截止日期"
+                android:textSize="10dp"/>
+
+
+
+            <Spinner
+                android:layout_width="90dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bg_1"
+                android:layout_marginRight="10dp"
+
+                android:id="@+id/spinner1"
+                android:textSize="10dp"/>
+
+
+            <Spinner
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bg_1"
+                android:layout_marginRight="10dp"
+
+                android:id="@+id/spinner"
+                android:textSize="10dp"/>
+            <LinearLayout
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:background="@drawable/button_background"
+                android:gravity="center">
+                <Button
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/search"
+                    android:id="@+id/search"
+                    />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ccc"
+        android:minHeight="40dip"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="区域"
+            android:textColor="#850" />
+
+        <newjohn.com.myapplication.listviewscroll.CHScrollView
+            android:id="@+id/item_scroll_title"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:scrollbars="none" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="100dip"
+                    android:layout_height="fill_parent"
+                    android:gravity="center"
+                    android:text="设备编号"
+                    android:textColor="#850" />
+
+                <TextView
+                    android:layout_width="100dip"
+                    android:layout_height="fill_parent"
+                    android:gravity="center"
+                    android:text="压力上限值(KPA)"
+                    android:textColor="#850" />
+
+                <TextView
+                    android:layout_width="100dip"
+                    android:layout_height="fill_parent"
+                    android:gravity="center"
+                    android:text="压力下限值(KPA)"
+                    android:textColor="#850" />
+
+                <TextView
+                    android:layout_width="100dip"
+                    android:layout_height="fill_parent"
+                    android:gravity="center"
+                    android:text="当前值(KPA)"
+                    android:textColor="#850" />
+
+                <TextView
+                    android:layout_width="100dip"
+                    android:layout_height="fill_parent"
+                    android:gravity="center"
+                    android:text="更新日期"
+                    android:textColor="#850" />
+
+
+            </LinearLayout>
+        </newjohn.com.myapplication.listviewscroll.CHScrollView>
+
+    </LinearLayout>
+
+    <newjohn.com.myapplication.listviewscroll.AutoListView
+        android:id="@+id/scroll_list"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:cacheColorHint="@android:color/transparent" />
+
+</LinearLayout>
+
+
+    <LinearLayout
+
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:background="@drawable/btn_bg_1"
+        android:id="@+id/hwait"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        >
+        <ProgressBar
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:text="加载中..."
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:textSize="15sp"/>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="newjohn.com.myapplication">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/shan"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/shan"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask" />
+        <activity android:name=".activity.ControlActivity" />
+        <activity android:name=".activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.OnlineSearchActivity" />
+        <activity
+            android:name=".activity.HistoryActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".activity.FilterActivity" />
+        <activity android:name=".activity.DownloadActivity" />
+        <activity
+            android:name=".activity.GraphActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.AlertActivity"
+            android:screenOrientation="landscape" />
+
+        <service android:name=".serv.PersistentConnectionService" />
+
+        <activity
+            android:name=".activity.ChartActivity"
+            android:screenOrientation="landscape" />
+        <activity android:name=".activity.ClearActivity" />
+        <activity android:name=".activity.SetActivity" />
+        <activity android:name=".dynamicLineChart.ChartTestActivity"
+            android:screenOrientation="landscape"></activity>
+    </application>
+
+</manifest>

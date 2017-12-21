@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="newjohn.com.myapplication.activity.MainActivity"
+    android:orientation="vertical"
+
+android:background="@drawable/bgk"
+
+    >
+<android.support.v7.widget.Toolbar
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:id="@+id/main_toorbar"
+app:title="主页"
+android:background="@color/colorPrimary">
+
+</android.support.v7.widget.Toolbar>
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:gravity="center"
+    >
+<GridView
+
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:numColumns="3"
+    android:columnWidth="80dp"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="20dp"
+    android:horizontalSpacing="30dp"
+    android:id="@+id/gridview"
+    android:layout_gravity="center_vertical">
+
+
+</GridView>
+</LinearLayout>
+
+
+
+
+    </LinearLayout>
