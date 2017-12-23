@@ -70,6 +70,7 @@ public class OnlineSearchActivity extends BaseActivity {
             super.handleMessage(msg);
 
             String str= (String) msg.obj;
+            Log.i(TAG, "handleMessage: "+str);
             onlineDatas=gson.fromJson(str,new TypeToken<ArrayList<OnlineData>>() {}.getType());
             Log.i(TAG, "onResponse: "+str);
             switch (msg.what){
@@ -277,7 +278,7 @@ public class OnlineSearchActivity extends BaseActivity {
                 .add("area",area).build();
         Log.i(TAG, "getDataFromNet: "+page+Global.user.getUserName()+area);
         final Request request=new Request.Builder()
-                .url("http://120.78.209.11:8080/WebProject/statusSearch")
+                .url(Constant.URL+"WebProject/statusSearch")
                 .post(requestBody)
                 .build();
         okHttpClient.newCall(request).enqueue(new Callback() {

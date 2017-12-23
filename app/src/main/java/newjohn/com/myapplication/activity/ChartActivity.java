@@ -1,5 +1,6 @@
 package newjohn.com.myapplication.activity;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
@@ -11,20 +12,25 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -273,10 +279,15 @@ public class ChartActivity extends BaseActivity {
 
                         String[] t= (String[]) times.toArray(new String[0]);
                         Log.i(TAG, "run: t"+ t.length);
-                        MyXFormatter formatter = new MyXFormatter(t);
-                        xAxis.setValueFormatter(formatter);
+                        if (times.size()!=0){
+                            //return mValues[(int) value % mValues.length];会报异常，除数为0；所以加判断
+                            MyXFormatter formatter = new MyXFormatter(t);
+                            xAxis.setValueFormatter(formatter);
+                        }
+
 
                         if (data!=null){
+
                             if (data.contains(set1)){
                                 data.removeDataSet(set1);
                                 set1=null;
@@ -307,7 +318,8 @@ public class ChartActivity extends BaseActivity {
                             contents= graphDatas.get(k).getContent();
                             Collections.reverse(contents);
                             if (k==0) {
-                                values1.clear();
+                                ArrayList<Entry> values1 = new ArrayList<>();
+
 
                                 //XYSeries series=new XYSeries(graphDatas.get(k).getDeviceNum());
                                 for (int i = 0; i < contents.size(); i++) {
@@ -315,8 +327,11 @@ public class ChartActivity extends BaseActivity {
 
                                     int j = times.indexOf(contents.get(i).getDateTime());
                                     float v=Float.parseFloat(contents.get(i).getValue());
+                                    float v1=Float.valueOf(contents.get(i).getValue());
+                                    Log.i(TAG, "run: " +v+v1+(0.0987F+i));
                                     Log.i(TAG, "run: sort "+k+":" +"排序号："+ j + "时间："+contents.get(i).getDateTime()+"值："+v);
-                                    values1.add(new Entry(j,v));
+                                    float v2=12.77777f;
+                                    values1.add(new Entry( j,v));
                                     if(v>highlimit||v<lowlimit){
                                         isAlert=true;}
 
@@ -342,9 +357,10 @@ public class ChartActivity extends BaseActivity {
                                     set1.setHighlightLineWidth(2f);//设置点击交点后显示高亮线宽
                                     set1.setHighlightEnabled(true);//是否禁用点击高亮线
                                     set1.setHighLightColor(Color.RED);//设置点击交点后显示交高亮线的颜色
-                                    set1.setValueTextSize(9f);//设置显示值的文字大小
-                                    set1.setDrawFilled(false);//设置禁用范围背景填充
 
+                                    set1.setDrawFilled(false);//设置禁用范围背景填充
+                               set1.setDrawValues(false);
+//                                set1.setValueTextSize(9f);//设置显示值的文字大小
                                     dataSets.add(set1);
 //                                }
                                 if (isAlert){
@@ -358,7 +374,7 @@ public class ChartActivity extends BaseActivity {
 
                             }
                             if (k==1) {
-                                values2.clear();
+                                ArrayList<Entry> values2 = new ArrayList<>();
 
                                 //XYSeries series=new XYSeries(graphDatas.get(k).getDeviceNum());
                                 for (int i = 0; i < contents.size(); i++) {
@@ -392,6 +408,7 @@ public class ChartActivity extends BaseActivity {
                                     set2.setCircleColor(Color.GRAY);
                                     set2.setLineWidth(5f);
                                     set2.setCircleRadius(5f);
+                                    set2.setDrawValues(false);
                                     set2.setValueTextSize(10f);
                                     dataSets.add(set2);
 
@@ -406,7 +423,7 @@ public class ChartActivity extends BaseActivity {
 
                             }
                             if (k==2) {
-                                values3.clear();
+                                ArrayList<Entry> values3 = new ArrayList<>();
 
                                 //XYSeries series=new XYSeries(graphDatas.get(k).getDeviceNum());
                                 for (int i = 0; i < contents.size(); i++) {
@@ -437,6 +454,7 @@ public class ChartActivity extends BaseActivity {
 
                                     set3.setLineWidth(5f);
                                     set3.setCircleRadius(5f);
+                                    set3.setDrawValues(false);
                                     set3.setValueTextSize(10f);
 //
 
@@ -465,6 +483,9 @@ public class ChartActivity extends BaseActivity {
 
                             lineChart.getData().notifyDataChanged();
                         }
+
+                        IMarker marker = new MyMarkerView(getApplicationContext(),R.layout.mark_view);
+                        lineChart.setMarker(marker);
 
 
                         lineChart.setData(data);
@@ -579,9 +600,9 @@ public class ChartActivity extends BaseActivity {
         leftAxis.enableGridDashedLine(10f, 10f, 0f);
         //是否绘制0所在的网格线
         leftAxis.setDrawZeroLine(false);
-        leftAxis.setAxisMaximum(200);
+        leftAxis.setAxisMaximum(150);
         leftAxis.setAxisMinimum(-100);
-        leftAxis.setLabelCount(30);
+        leftAxis.setLabelCount(25);
         leftAxis.addLimitLine(ll1);
         leftAxis.addLimitLine(ll2);
 
@@ -617,6 +638,45 @@ public class ChartActivity extends BaseActivity {
             // "value" represents the position of the label on the axis (x or y)
             Log.d(TAG, "----->getFormattedValue: "+value);
             return mValues[(int) value % mValues.length];
+        }
+    }
+
+
+
+
+    public class MyMarkerView extends MarkerView {
+
+        private TextView tvContent;
+
+        public MyMarkerView(Context context, int layoutResource) {
+            super(context, layoutResource);
+
+            // find your layout components
+            tvContent = (TextView) findViewById(R.id.tvContent);
+        }
+
+        // callbacks everytime the MarkerView is redrawn, can be used to update the
+        // content (user-interface)
+        @Override
+        public void refreshContent(Entry e, Highlight highlight) {
+
+            tvContent.setText("" + e.getY());
+
+            // this will perform necessary layouting
+            super.refreshContent(e, highlight);
+        }
+
+        private MPPointF mOffset;
+
+        @Override
+        public MPPointF getOffset() {
+
+            if(mOffset == null) {
+                // center the marker horizontally and vertically
+                mOffset = new MPPointF(-(getWidth() / 2), -getHeight());
+            }
+
+            return mOffset;
         }
     }
 

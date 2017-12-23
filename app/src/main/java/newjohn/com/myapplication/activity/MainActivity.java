@@ -4,7 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -30,6 +33,7 @@ import newjohn.com.myapplication.bean.DeviceInfo;
 import newjohn.com.myapplication.dynamicLineChart.ChartTestActivity;
 import newjohn.com.myapplication.global.Global;
 import newjohn.com.myapplication.serv.PersistentConnectionService;
+import newjohn.com.myapplication.serv.WebSocketService;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -56,15 +60,18 @@ public class MainActivity extends BaseActivity {
     private String TAG="MainActivity";
     Gson gson=new Gson();
     private Intent mIntent;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(TAG, "onCreate: is first"+Global.isfirst);
+        toolbar=findViewById(R.id.main_toorbar);
+        setSupportActionBar(toolbar);
         if (Global.isfirst){
             //启动服务
-            mIntent = new Intent(this, PersistentConnectionService.class);
+            mIntent = new Intent(this, WebSocketService.class);
             startService(mIntent);
             Global.isfirst=false;
 
@@ -234,5 +241,27 @@ public class MainActivity extends BaseActivity {
 
 
 
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.i(TAG,"onCreateOptionsMenu");
+        //创建Menu菜单
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.restartService:
+                mIntent = new Intent(this, WebSocketService.class);
+                startService(mIntent);
+                Global.isfirst=false;
+
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -71,12 +71,13 @@
             <LinearLayout
                 android:layout_width="50dp"
                 android:layout_height="30dp"
-                android:background="@drawable/button_background"
+                android:background="@drawable/btn_bg_1"
+
                 android:gravity="center">
-                <Button
+                <ImageView
+                    android:background="@drawable/button_background"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@drawable/search"
                     android:id="@+id/search"
                     />
             </LinearLayout>

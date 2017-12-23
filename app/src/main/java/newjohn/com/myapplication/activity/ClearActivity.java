@@ -40,12 +40,14 @@ public class ClearActivity extends BaseActivity {
     Toolbar toolbar;
     OkHttpClient okHttpClient;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clear);
         deviceDbDao= MyApplication.getMyApplication().getDaoSession().getDeviceDbDao();
         okHttpClient=new OkHttpClient();
+
         data=deviceDbDao.loadAll();
         listview=findViewById(R.id.listview_c);
         toolbar=findViewById(R.id.toolbar_c);

@@ -45,7 +45,7 @@
             <Button
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/update"
+                android:background="@drawable/updata_background"
                 android:id="@+id/search2"
                 />
         </LinearLayout>

@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -101,7 +102,7 @@ public class HistoryActivity extends BaseActivity implements  AutoListView.OnRef
     Spinner areaSpinner;
 
     @BindView(R.id.search)
-    Button searchButton;
+    ImageView searchButton;
 
     LinearLayout linearLayoutwait;
 
@@ -271,7 +272,7 @@ public class HistoryActivity extends BaseActivity implements  AutoListView.OnRef
                                 .add("deviceNum",deviceNum)
                                 .add("area",area).build();
                         final Request request1=new Request.Builder()
-                                .url("http://120.78.209.11:8080/WebProject/historySearch")
+                                .url(Constant.URL+"WebProject/historySearch")
                                 .post(requestBody1)
                                 .build();
                         Log.i(TAG, "run: "+Global.user.getUserName()+start_time+end_time+pageSize+page+deviceNum+area);
@@ -572,9 +573,12 @@ public class HistoryActivity extends BaseActivity implements  AutoListView.OnRef
 
     public void search(){
 
+
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 linearLayoutwait.setVisibility(View.VISIBLE);
 
 
@@ -591,7 +595,7 @@ public class HistoryActivity extends BaseActivity implements  AutoListView.OnRef
                         .add("area",area).build();
                 Log.i(TAG, "onClick: "+Global.user.getUserName()+start_time+end_time+page+pageSize+deviceNum+area);
                 final Request request=new Request.Builder()
-                        .url("http://120.78.209.11:8080/WebProject/historySearch")
+                        .url(Constant.URL+"WebProject/historySearch")
                         .post(requestBody)
                         .build();
                 okHttpClient.newCall(request).enqueue(new Callback() {

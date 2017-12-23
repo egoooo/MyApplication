@@ -21,6 +21,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -140,9 +141,13 @@ public class PersistentConnectionService extends Service {
                     Log.i(TAG, "连接成功  " + SOCKET_HOST);
                     mDataOutputStream = new DataOutputStream(
                             mSocket.getOutputStream());
+//
+//                   mDataOutputStream.writeUTF(Global.user.getUserName());
+//                   mDataOutputStream.flush();
 
-                   mDataOutputStream.writeUTF(Global.user.getUserName());
-                   mDataOutputStream.flush();
+                    mDataOutputStream.write(Global.user.getUserName().getBytes());
+                    mDataOutputStream.flush();
+
 
 
 
@@ -326,8 +331,10 @@ public class PersistentConnectionService extends Service {
         @Override
         public void run() {
             DataInputStream mInputStream = null;
+
             try {
                 mInputStream = new DataInputStream(mSocket.getInputStream());
+
                 Log.d(TAG, "SocketThread running!");
                 while (!mStopThread) {
                     String resultStr = mInputStream.readUTF();
