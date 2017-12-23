@@ -148,8 +148,12 @@ public class WebSocketService extends Service {
                     @Override
                     public void onClose(int i, String s, boolean b) {
                         System.out.println("client onClose:" + i + " " + s + " " + b);
-                        sendNotification("提示","网络关闭，报警服务被迫关闭,请在主页面手动重启");
-                       stopSelf();
+
+                        if (!isCloseService){
+                            sendNotification("提示","网络关闭，报警服务被迫关闭,请在主页面手动重启");
+
+                        }
+                        stopSelf();
 
                     }
 
@@ -179,6 +183,10 @@ public class WebSocketService extends Service {
 
     @Override
     public void onDestroy() {
+        isCloseService=true;
+
+        webSocketClient.close();
+
 
         Log.i(TAG, "onDestroy: "+"dddd");
         super.onDestroy();

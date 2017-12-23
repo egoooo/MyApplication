@@ -32,7 +32,7 @@ import newjohn.com.myapplication.listviewscroll.CHScrollView;
 import newjohn.com.myapplication.listviewscroll.ListViewScrollAdapter;
 import newjohn.com.myapplication.serv.PersistentConnectionService;
 
-public class AlertActivity extends BaseActivity {
+public class AlertActivity extends BaseActivity implements AutoListView.OnRefreshListener, AutoListView.OnLoadListener, AdapterView.OnItemClickListener{
     private static final String TAG ="AlertActivity" ;
     private Intent mIntent;
     private MsgReceiver msgReceiver;
@@ -41,11 +41,11 @@ public class AlertActivity extends BaseActivity {
 
     @BindView(R.id.toolbar_a)
     Toolbar toolbar;
-    @BindView(R.id.item_scroll_title_a)
+
     CHScrollView headerScroll;
-    @BindView(R.id.scroll_list_a)
+
     AutoListView lstv;
-    private ListViewScrollAdapter adapter; //表格的适配器
+    public ListViewScrollAdapter adapter; //表格的适配器
     int page=0;
 //    private Handler handler = new Handler() {
 //        @SuppressWarnings("unchecked")
@@ -86,36 +86,44 @@ public class AlertActivity extends BaseActivity {
 //        mIntent = new Intent(this, PersistentConnectionService.class);
 //        startService(mIntent);
 
+        headerScroll = (CHScrollView) findViewById(R.id.item_scroll_title_a);
+        CHScrollView.CHScrollViewHelper.mHScrollViews.clear();
+
         CHScrollView.CHScrollViewHelper.mHScrollViews.clear();
         CHScrollView.CHScrollViewHelper.mHScrollViews.add(headerScroll);
+        lstv = (AutoListView) findViewById(R.id.scroll_list_a);
         adapter = new ListViewScrollAdapter(this, list, R.layout.alert_list_item,
                 new String[] { "area", "deviceNum", "value","info", "dateTime"},
                 new int[] { R.id.item_title_a, R.id.num_a, R.id.value_a, R.id.info_a,R.id.date_a,},
                 R.id.item_scroll_a, lstv);
+        lstv.setOnRefreshListener(this);
+        lstv.setOnItemClickListener(this);
+        lstv.setOnLoadListener(this);
 
         lstv.setAdapter(adapter);
-        lstv.setOnRefreshListener(new AutoListView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getRefreshData();
-
-            }
-        });
-        lstv.setOnLoadListener(new AutoListView.OnLoadListener() {
-            @Override
-            public void onLoad() {
-                page++;
-
-                getLoadMoreData(page);
-
-            }
-        });
-        lstv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-            }
-        });
+//        lstv.setOnRefreshListener(new AutoListView.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                getRefreshData();
+//
+//            }
+//        });
+//        lstv.setOnLoadListener(new AutoListView.OnLoadListener() {
+//            @Override
+//            public void onLoad() {
+//
+//                page++;
+//                Log.i(TAG, "onLoad: page"+page);
+//                getLoadMoreData(page);
+//
+//            }
+//        });
+//        lstv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//            }
+//        });
 
         getRefreshData();
 
@@ -132,6 +140,38 @@ public class AlertActivity extends BaseActivity {
         //注销广播
         unregisterReceiver(msgReceiver);
         super.onDestroy();
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+    }
+
+    @Override
+    public void onRefresh() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getRefreshData();
+            }
+        }).start();
+
+
+    }
+
+    @Override
+    public void onLoad() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                page++;
+                Log.i(TAG, "onLoad: page"+page);
+                getLoadMoreData(page);
+            }
+        }).start();
+
+
+
     }
 
 
@@ -155,7 +195,7 @@ public class AlertActivity extends BaseActivity {
 
     public void getRefreshData(){
         List<AlertData> datas=alertDataDao.queryBuilder().offset(0).limit(20).list();
-        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        final List<Map<String, String>> result = new ArrayList<Map<String, String>>();
         Map<String, String> data = null;
         for (int i = 0; i < datas.size(); i++) {
             data = new HashMap<String, String>();
@@ -169,11 +209,19 @@ public class AlertActivity extends BaseActivity {
         }
 
 
-        lstv.onRefreshComplete();
-        list.clear();
-        list.addAll(result);
-        lstv.setResultSize(result.size());
-        adapter.notifyDataSetChanged();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                lstv.onRefreshComplete();
+                list.clear();
+                list.addAll(result);
+                lstv.setResultSize(result.size());
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+
+
 
 //        Message msg = handler.obtainMessage();
 //        msg.what =1;
@@ -184,8 +232,9 @@ public class AlertActivity extends BaseActivity {
     }
     public void getLoadMoreData(int page){
         List<AlertData> datas=alertDataDao.queryBuilder().offset(page*20).limit(20).list();
-        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        final List<Map<String, String>> result = new ArrayList<Map<String, String>>();
         Map<String, String> data = null;
+        Log.i(TAG, "getLoadMoreData: count"+datas.size()+"page"+page);
         for (int i = 0; i < datas.size(); i++) {
             data = new HashMap<String, String>();
             data.put("area", datas.get(i).getArea());
@@ -198,11 +247,16 @@ public class AlertActivity extends BaseActivity {
         }
 
 
-        lstv.onLoadComplete();
-        list.clear();
-        list.addAll(result);
-        lstv.setResultSize(result.size());
-        adapter.notifyDataSetChanged();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                lstv.onLoadComplete();
+
+                list.addAll(result);
+                lstv.setResultSize(result.size());
+                adapter.notifyDataSetChanged();
+            }
+        });
 
 //        Message msg = handler.obtainMessage();
 //        msg.what =1;

@@ -1,5 +1,6 @@
 package newjohn.com.myapplication.activity;
 
+import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -230,7 +231,11 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
-
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                //移除标记为id的通知 (只是针对当前Context下的所有Notification)
+//                notificationManager.cancel(1);
+//                //移除所有通知
+                notificationManager.cancelAll();
                 Global.isfirst=true;
                 AtyContainer.getInstance().finishAllActivity();
 
